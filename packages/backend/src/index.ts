@@ -1,10 +1,6 @@
 /* eslint-disable no-console -- need consoles for BE */
 
-import { Queue } from "bullmq";
-import express from "express";
-import fs from "fs";
-import path from "path";
-
+import { CONTAINERS } from "@common";
 import {
   createOrStartDbContainer,
   dbDeleteRequestHandler,
@@ -17,6 +13,10 @@ import {
 } from "@handlers/queue";
 import { verifyClerk } from "@middlewares/clerk-auth";
 import { createProject, getProject, listProjects } from "@optimeleon/db";
+import { Queue } from "bullmq";
+import express from "express";
+import fs from "fs";
+import path from "path";
 
 const app = express();
 app.use(express.json());
@@ -25,17 +25,13 @@ const PORT = Number(process.env.PORT ?? 6969);
 
 // Initialize BullMQ queue for script generation
 const projectQueue = new Queue("script-queue", {
-  connection: { host: "localhost", port: 6379 },
+  connection: { host: "localhost", port: CONTAINERS.REDIS.port },
 });
-
-//
-// Projects API
-//
 
 // Create a new project and enqueue script generation
 app.post("/projects", verifyClerk, async (req, res) => {
   const { name, targetUrl, ignoredPaths } = req.body;
-  const userId = (req as any)?.clerk?.userId;
+  const userId = (req as any)?.clerk?.userId ?? "demo-user";
 
   if (!name || !targetUrl) {
     return res.status(400).json({ error: "Name and targetUrl are required" });
@@ -67,7 +63,7 @@ app.post("/projects", verifyClerk, async (req, res) => {
 // List all projects for the current user
 app.get("/projects", verifyClerk, async (_, res) => {
   // const projects = await listProjects({ userId: req.clerk.userId });
-  const projects = await listProjects();
+  const projects = await listProjects("demo-user");
   res.json(projects);
 });
 

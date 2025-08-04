@@ -13,10 +13,13 @@ export const createProject = async (
   });
 };
 
-export const getProject = async (id: string) => {
-  return prisma.project.findUnique({ where: { id } });
+export const listProjects = async (userId: string) => {
+  return prisma.project.findMany({
+    where: { userId },
+    orderBy: { createdAt: "desc" },
+  });
 };
 
-export const listProjects = async () => {
-  return prisma.project.findMany();
+export const getProject = async (id: string) => {
+  return prisma.project.findUnique({ where: { id } });
 };
