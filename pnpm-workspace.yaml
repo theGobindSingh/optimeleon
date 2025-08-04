@@ -1,13 +1,20 @@
 packages:
   - packages/*
+
 onlyBuiltDependencies:
   - core-js-pure
+  - cpu-features
   - esbuild
+  - protobufjs
   - sharp
+  - ssh2
   - unrs-resolver
+
 overrides:
   '@types/react': 19.1.9
   '@types/react-dom': 19.1.7
   react: 19.1.1
   react-dom: 19.1.1
   typescript: 5.9.2
+  glob: 11.0.3
+  rimraf: 6.0.1

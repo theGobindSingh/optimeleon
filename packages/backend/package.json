@@ -1,0 +1,25 @@
+{
+  "name": "@optimeleon/backend",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bullmq": "^5.56.9",
+    "dockerode": "^4.0.7",
+    "express": "^5.1.0",
+    "redis": "^5.7.0"
+  },
+  "devDependencies": {
+    "@optimeleon/eslint": "workspace:*",
+    "@optimeleon/tsconfigs": "workspace:*",
+    "@types/dockerode": "^3.3.42",
+    "@types/express": "^5.0.3",
+    "eslint": "^9.22.0"
+  }
+}

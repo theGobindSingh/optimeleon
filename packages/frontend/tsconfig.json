@@ -1,26 +1,50 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": ["@optimeleon/tsconfigs/react.tsconfig.json"],
+  "extends": [
+    "@optimeleon/tsconfigs/react.tsconfig.json"
+  ],
   "compilerOptions": {
     "target": "ES5",
     "forceConsistentCasingInFileNames": true,
     "jsxImportSource": "@emotion/react",
     "paths": {
-      "@assets/*": ["./public/assets/*"],
-      "@images/*": ["./public/assets/images/*"],
-      "@public/*": ["./public/*"],
-      "@components/*": ["./components/*"],
-      "@modules/*": ["./modules/*"],
-      "@pages/*": ["./pages/*"],
-      "@hooks/*": ["./hooks/*"],
-      "@styles/*": ["./styles/*"],
-      "@/*": ["./*"]
+      "@assets/*": [
+        "./public/assets/*"
+      ],
+      "@images/*": [
+        "./public/assets/images/*"
+      ],
+      "@public/*": [
+        "./public/*"
+      ],
+      "@components/*": [
+        "./components/*"
+      ],
+      "@modules/*": [
+        "./modules/*"
+      ],
+      "@pages/*": [
+        "./pages/*"
+      ],
+      "@hooks/*": [
+        "./hooks/*"
+      ],
+      "@styles/*": [
+        "./styles/*"
+      ],
+      "@/*": [
+        "./*"
+      ]
     },
     "noPropertyAccessFromIndexSignature": false,
     "ignoreDeprecations": "5.0",
     "verbatimModuleSyntax": false,
     "allowUnusedLabels": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "noEmit": true,
+    "incremental": true,
+    "resolveJsonModule": true,
+    "jsx": "preserve"
   },
   "include": [
     "next-env.d.ts",
@@ -29,5 +53,7 @@
     "eslint.config.mjs",
     "next.config.js"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

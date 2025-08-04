@@ -10,7 +10,7 @@
     "commit": "git-cz",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "clean": "rimraf pnpm-lock.yaml && rimraf dist && rimraf node_modules && rimraf .turbo && rimraf .next && rimraf .cache"
+    "clean": "rimraf pnpm-lock.yaml ./**/*/pnpm-lock.yaml dist ./**/*/dist node_modules ./**/*/node_modules .turbo ./**/*/.turbo .next ./**/*/.next .cache ./**/*/.cache"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.7.1",
@@ -41,15 +41,9 @@
     "@types/react-dom": "19.1.7",
     "react": "19.1.1",
     "react-dom": "19.1.1",
-    "typescript": "5.9.2"
-  },
-  "overrides": {
-    "@types/react": "19.1.9",
-    "@types/react-dom": "19.1.7",
-    "react": "19.1.1",
-    "react-dom": "19.1.1",
-    "rimraf": "6.0.1",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "glob": "11.0.3",
+    "rimraf": "6.0.1"
   },
   "packageManager": "pnpm@10.14.0",
   "engines": {
