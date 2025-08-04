@@ -10,7 +10,8 @@
       "@common": ["src/common"],
       "@common/*": ["src/common/*"],
       "@handlers/*": ["src/handlers/*"],
-      "@middlewares/*": ["src/middlewares/*"]
+      "@middlewares/*": ["src/middlewares/*"],
+      "@workers/*": ["src/workers/*"]
     }
   },
   "include": ["src/**/*"]

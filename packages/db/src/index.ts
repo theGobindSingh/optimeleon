@@ -23,3 +23,10 @@ export const listProjects = async (userId: string) => {
 export const getProject = async (id: string) => {
   return prisma.project.findUnique({ where: { id } });
 };
+
+export const updateProjectScriptPath = async (
+  id: string,
+  scriptPath: string,
+) => {
+  return prisma.project.update({ where: { id }, data: { scriptPath } });
+};
