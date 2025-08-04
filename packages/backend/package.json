@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@optimeleon/db": "workspace:*",
+    "@clerk/express": "^1.7.15",
     "bullmq": "^5.56.9",
     "dockerode": "^4.0.7",
     "express": "^5.1.0",

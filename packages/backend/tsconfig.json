@@ -9,7 +9,8 @@
     "paths": {
       "@common": ["src/common"],
       "@common/*": ["src/common/*"],
-      "@handlers/*": ["src/handlers/*"]
+      "@handlers/*": ["src/handlers/*"],
+      "@middlewares/*": ["src/middlewares/*"]
     }
   },
   "include": ["src/**/*"]

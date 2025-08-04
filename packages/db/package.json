@@ -8,7 +8,8 @@
     "migrate": "prisma migrate dev",
     "studio": "prisma studio",
     "generate": "prisma generate",
-    "dev": "pnpm studio"
+    "dev": "pnpm studio",
+    "build": "pnpm generate"
   },
   "keywords": [],
   "author": "",

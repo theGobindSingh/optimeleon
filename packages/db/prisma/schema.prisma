@@ -15,8 +15,11 @@ datasource db {
 }
 
 model Project {
-  id        String   @id @default(cuid())
-  name      String
-  scriptUrl String?
-  createdAt DateTime @default(now())
+  id           String    @id @default(cuid())
+  name         String
+  targetUrl    String
+  ignoredPaths String[]  @default([])
+  userId       String
+  scriptPath   String?
+  createdAt    DateTime  @default(now())
 }
