@@ -13,6 +13,7 @@ import {
 } from "@handlers/queue";
 import { verifyClerk } from "@middlewares/clerk-auth";
 import { createProject, getProject, listProjects } from "@optimeleon/db";
+import worker from "@workers";
 import { Queue } from "bullmq";
 import express from "express";
 import fs from "fs";
@@ -114,6 +115,7 @@ app.get("/job-demo", async (_req, res) => {
 const main = async () => {
   console.log(await createOrStartRedisContainer());
   console.log(await createOrStartDbContainer());
+  worker();
   console.log(`BackEnd Server listening on port ${PORT}`);
 };
 

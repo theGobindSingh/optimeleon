@@ -11,6 +11,7 @@
       "@common/*": ["src/common/*"],
       "@handlers/*": ["src/handlers/*"],
       "@middlewares/*": ["src/middlewares/*"],
+      "@workers": ["src/workers/index"],
       "@workers/*": ["src/workers/*"]
     }
   },
