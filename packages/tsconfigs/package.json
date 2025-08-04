@@ -1,0 +1,16 @@
+{
+  "name": "@optimeleon/tsconfigs",
+  "version": "1.0.0",
+  "private": true,
+  "author": {
+    "name": "Gobind Singh | Hymns Of Web",
+    "email": "thesinghgobind@gmail.com",
+    "url": "https://github.com/theGobindSingh"
+  },
+  "license": "MIT",
+  "description": "",
+  "devDependencies": {
+    "@tsconfig/next": "^2.0.3",
+    "@tsconfig/strictest": "^2.0.5"
+  }
+}

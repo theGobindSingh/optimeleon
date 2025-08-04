@@ -1,0 +1,17 @@
+{
+  "extends": ["@optimeleon/tsconfigs/base.tsconfig.json"],
+  "include": [
+    "*.config.mjs",
+    "base.mjs",
+    "next.mjs",
+    "react.mjs",
+    "storybook.mjs"
+  ],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "noEmit": true,
+    "moduleResolution": "nodenext",
+    "module": "NodeNext",
+    "allowJs": true
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "@optimeleon/frontend",
+  "version": "0.1.0",
+  "author": {
+    "name": "Gobind Singh",
+    "email": "thesinghgobind@gmail.com",
+    "url": "https://github.com/theGobindSingh/"
+  },
+  "private": true,
+  "scripts": {
+    "prebuild": "npm run lint:fix",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "prettier --config .prettierrc \"{components,hooks,modules,pages,public,styles}/**/*.{ts,js,tsx,jsx}\" --write && eslint \"{components,hooks,modules,pages,public,styles}/**/*.{ts,js,tsx,jsx}\"",
+    "lint:fix": "prettier --config .prettierrc \"{components,hooks,modules,pages,public,styles}/**/*.{ts,js,tsx,jsx}\" --write && eslint \"{components,hooks,modules,pages,public,styles}/**/*.{ts,js,tsx,jsx}\" --fix"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@kami-ui/next-theme": "*",
+    "@kami-ui/react-components": "*",
+    "next": "^15.2.2",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "sharp": "^0.34.3"
+  },
+  "devDependencies": {
+    "@kami-ui/types": "*",
+    "@optimeleon/eslint": "workspace:*",
+    "@optimeleon/tsconfigs": "workspace:*",
+    "eslint": "^9.22.0"
+  }
+}
