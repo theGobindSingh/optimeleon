@@ -6,7 +6,7 @@ import fs from "fs";
 import path from "path";
 
 import {
-  createOrStartContainer,
+  createOrStartDbContainer,
   dbDeleteRequestHandler,
   dbPostRequestHandler,
 } from "@handlers/db";
@@ -35,7 +35,7 @@ const projectQueue = new Queue("script-queue", {
 // Create a new project and enqueue script generation
 app.post("/projects", verifyClerk, async (req, res) => {
   const { name, targetUrl, ignoredPaths } = req.body;
-  const userId = req.clerk.userId;
+  const userId = (req as any)?.clerk?.userId;
 
   if (!name || !targetUrl) {
     return res.status(400).json({ error: "Name and targetUrl are required" });
@@ -43,10 +43,10 @@ app.post("/projects", verifyClerk, async (req, res) => {
 
   // Persist project
   const project = await createProject(
-    name,
-    targetUrl,
-    ignoredPaths || [],
-    userId,
+    name as string,
+    targetUrl as string,
+    (ignoredPaths as string[]) ?? [],
+    userId as string,
   );
 
   // Enqueue background job
@@ -65,15 +65,16 @@ app.post("/projects", verifyClerk, async (req, res) => {
 });
 
 // List all projects for the current user
-app.get("/projects", verifyClerk, async (req, res) => {
-  const projects = await listProjects({ userId: req.clerk.userId });
+app.get("/projects", verifyClerk, async (_, res) => {
+  // const projects = await listProjects({ userId: req.clerk.userId });
+  const projects = await listProjects();
   res.json(projects);
 });
 
 // Serve the generated script, with user/origin validation
 app.get("/scripts/:id.js", verifyClerk, async (req, res) => {
-  const project = await getProject(req.params.id);
-  if (!project || project.userId !== req?.clerk?.userId) {
+  const project = await getProject(req?.params?.id ?? "");
+  if (!project || project.userId !== (req as any)?.clerk?.userId) {
     return res.status(403).end();
   }
 
@@ -92,12 +93,10 @@ app.get("/scripts/:id.js", verifyClerk, async (req, res) => {
     return res.status(404).json({ error: "Script not found" });
   }
 
-  res.type("application/javascript").send(fs.readFileSync(filePath, "utf-8"));
+  return res
+    .type("application/javascript")
+    .send(fs.readFileSync(filePath, "utf-8"));
 });
-
-//
-// Existing DB container management routes
-//
 
 // POST /db?run=[true|false]
 app.post("/db", dbPostRequestHandler);
@@ -105,33 +104,23 @@ app.post("/db", dbPostRequestHandler);
 // DELETE /db
 app.delete("/db", dbDeleteRequestHandler);
 
-//
-// Existing Redis/Queue container management routes
-//
-
 // POST /queue?run=[true|false]
 app.post("/queue", redisPostRequestHandler);
 
 // DELETE /queue
 app.delete("/queue", redisDeleteRequestHandler);
 
-//
-// Optional demo endpoint for testing enqueuing
-//
-
 app.get("/job-demo", async (_req, res) => {
   await projectQueue.add("demo-job", { when: new Date().toISOString() });
   res.status(200).json({ message: "Demo job added!" });
 });
 
-//
-// Start server
-//
+const main = async () => {
+  console.log(await createOrStartRedisContainer());
+  console.log(await createOrStartDbContainer());
+  console.log(`BackEnd Server listening on port ${PORT}`);
+};
 
 app.listen(PORT, () => {
-  void (async () => {
-    console.log(await createOrStartRedisContainer());
-    console.log(await createOrStartContainer());
-    console.log(`BackEnd Server listening on port ${PORT}`);
-  })();
+  void main();
 });

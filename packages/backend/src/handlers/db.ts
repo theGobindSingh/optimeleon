@@ -30,7 +30,7 @@ const ensurePostgresImage = async () => {
 /**
  * Create or start the Postgres container.
  */
-export const createOrStartContainer = async (): Promise<string> => {
+export const createOrStartDbContainer = async (): Promise<string> => {
   await ensurePostgresImage();
 
   const container = docker.getContainer(CONTAINERS.DB.name);
@@ -90,7 +90,7 @@ export const dbPostRequestHandler: RequestHandler = async (req, res) => {
     if (!run) {
       message = await stopContainer();
     } else {
-      message = await createOrStartContainer();
+      message = await createOrStartDbContainer();
     }
 
     res.status(200).json({ message });

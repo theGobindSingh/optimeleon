@@ -2,6 +2,9 @@
   "name": "@optimeleon/db",
   "version": "1.0.0",
   "description": "",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
     "prepare": "echo 'DATABASE_URL=\"postgres://postgres:password@localhost:5432/mydb\"' > .env && pnpm run migrate --name init && pnpm run generate",
     "reset": "rimraf prisma/migrations && rimraf generated && pnpm prisma migrate reset --force",
@@ -9,7 +12,7 @@
     "studio": "prisma studio",
     "generate": "prisma generate",
     "dev": "pnpm studio",
-    "build": "pnpm generate"
+    "build": "rollup -c rollup.config.mjs"
   },
   "keywords": [],
   "author": "",
@@ -17,7 +20,8 @@
   "devDependencies": {
     "prisma": "^6.13.0",
     "@optimeleon/eslint": "workspace:*",
-    "@optimeleon/tsconfigs": "workspace:*"
+    "@optimeleon/tsconfigs": "workspace:*",
+    "@optimeleon/rollup": "workspace:*"
   },
   "dependencies": {
     "@prisma/client": "^6.13.0"
