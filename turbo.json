@@ -16,12 +16,6 @@
     "dev": {
       "cache": false,
       "persistent": true
-    },
-    "@optimeleon/backend#dev": {
-      "dependsOn": ["^@optimeleon/db#build"]
-    },
-    "@optimeleon/db#dev": {
-      "dependsOn": ["^@optimeleon/backend#dev"]
     }
   }
 }
