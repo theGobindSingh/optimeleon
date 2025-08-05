@@ -2,9 +2,14 @@ packages:
   - packages/*
 
 onlyBuiltDependencies:
+  - '@clerk/shared'
+  - '@prisma/client'
+  - '@prisma/engines'
   - core-js-pure
   - cpu-features
   - esbuild
+  - msgpackr-extract
+  - prisma
   - protobufjs
   - sharp
   - ssh2
@@ -13,8 +18,8 @@ onlyBuiltDependencies:
 overrides:
   '@types/react': 19.1.9
   '@types/react-dom': 19.1.7
+  glob: 11.0.3
   react: 19.1.1
   react-dom: 19.1.1
-  typescript: 5.9.2
-  glob: 11.0.3
   rimraf: 6.0.1
+  typescript: 5.9.2

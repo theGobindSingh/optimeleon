@@ -6,12 +6,13 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
-    "prepare": "echo 'DATABASE_URL=\"postgres://postgres:password@localhost:5432/mydb\"' > .env && pnpm run migrate --name init && pnpm run generate",
+    "prepare": "echo 'DATABASE_URL=\"postgres://postgres:password@localhost:5432/mydb\"' > .env",
     "reset": "rimraf prisma/migrations && rimraf generated && pnpm prisma migrate reset --force",
     "migrate": "prisma migrate dev",
     "studio": "prisma studio",
     "generate": "prisma generate",
     "dev": "pnpm studio",
+    "prebuild": "pnpm run migrate --name pre-build && pnpm run generate",
     "build": "rollup -c rollup.config.mjs"
   },
   "keywords": [],
