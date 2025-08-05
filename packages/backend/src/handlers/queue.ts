@@ -24,31 +24,79 @@ const ensureRedisImage = async () => {
   }
 };
 
+// Wait for Redis to be ready
+const waitForRedis = async (maxRetries = 30): Promise<void> => {
+  const { createConnection } = await import("node:net");
+
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      await new Promise<void>((resolve, reject) => {
+        const socket = createConnection(CONTAINERS.REDIS.port, "localhost");
+
+        const timeout = setTimeout(() => {
+          socket.destroy();
+          reject(new Error("Connection timeout"));
+        }, 1000);
+
+        socket.on("connect", () => {
+          clearTimeout(timeout);
+          socket.destroy();
+          resolve();
+        });
+
+        socket.on("error", (err) => {
+          clearTimeout(timeout);
+          socket.destroy();
+          reject(err);
+        });
+      });
+
+      console.log("✅ Redis is ready!");
+      return;
+    } catch {
+      console.log(`⏳ Waiting for Redis... (attempt ${i + 1}/${maxRetries})`);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+  }
+
+  throw new Error("Redis failed to become ready after maximum retries");
+};
+
 export const createOrStartRedisContainer = async (): Promise<string> => {
   await ensureRedisImage();
   const container = docker.getContainer(CONTAINERS.REDIS.name);
   const info = await container.inspect().catch(() => null);
+
+  let message: string;
+
   if (info) {
     if (info.State.Running) {
-      return "Redis container is already running";
+      message = "Redis container is already running";
+    } else {
+      await container.start();
+      message = "Existing Redis container started";
     }
-    await container.start();
-    return "Existing Redis container started";
-  }
-  await docker
-    .createContainer({
-      Image: CONTAINERS.REDIS.image,
-      name: CONTAINERS.REDIS.name,
-      HostConfig: {
-        PortBindings: {
-          [`${CONTAINERS.REDIS.port}/tcp`]: [
-            { HostPort: String(CONTAINERS.REDIS.port) },
-          ],
+  } else {
+    await docker
+      .createContainer({
+        Image: CONTAINERS.REDIS.image,
+        name: CONTAINERS.REDIS.name,
+        HostConfig: {
+          PortBindings: {
+            [`${CONTAINERS.REDIS.port}/tcp`]: [
+              { HostPort: String(CONTAINERS.REDIS.port) },
+            ],
+          },
         },
-      },
-    })
-    .then((ctr) => ctr.start());
-  return "New Redis container created & started";
+      })
+      .then((ctr) => ctr.start());
+    message = "New Redis container created & started";
+  }
+
+  // Wait for Redis to be ready before returning
+  await waitForRedis();
+
+  return message;
 };
 
 const stopRedisContainer = async (): Promise<string> => {

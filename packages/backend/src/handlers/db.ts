@@ -28,6 +28,48 @@ const ensurePostgresImage = async () => {
 };
 
 /**
+ * Wait for Postgres to be ready to accept connections.
+ */
+const waitForPostgres = async (maxRetries = 30): Promise<void> => {
+  const { createConnection } = await import("node:net");
+
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      await new Promise<void>((resolve, reject) => {
+        const socket = createConnection(CONTAINERS.DB.port, "localhost");
+
+        const timeout = setTimeout(() => {
+          socket.destroy();
+          reject(new Error("Connection timeout"));
+        }, 1000);
+
+        socket.on("connect", () => {
+          clearTimeout(timeout);
+          socket.destroy();
+          resolve();
+        });
+
+        socket.on("error", (err) => {
+          clearTimeout(timeout);
+          socket.destroy();
+          reject(err);
+        });
+      });
+
+      console.log("✅ Postgres is ready!");
+      return;
+    } catch {
+      console.log(
+        `⏳ Waiting for Postgres... (attempt ${i + 1}/${maxRetries})`,
+      );
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+  }
+
+  throw new Error("Postgres failed to become ready after maximum retries");
+};
+
+/**
  * Create or start the Postgres container.
  */
 export const createOrStartDbContainer = async (): Promise<string> => {
@@ -36,30 +78,37 @@ export const createOrStartDbContainer = async (): Promise<string> => {
   const container = docker.getContainer(CONTAINERS.DB.name);
   const info = await container.inspect().catch(() => null);
 
+  let message: string;
+
   if (info) {
     if (info.State.Running) {
-      return "Postgres container is already running";
+      message = "Postgres container is already running";
+    } else {
+      await container.start();
+      message = "Existing Postgres container started";
     }
-    await container.start();
-    return "Existing Postgres container started";
+  } else {
+    await docker
+      .createContainer({
+        Image: CONTAINERS.DB.image,
+        name: CONTAINERS.DB.name,
+        Env: [`POSTGRES_PASSWORD=${POSTGRES_PASSWORD}`],
+        HostConfig: {
+          PortBindings: {
+            [`${CONTAINERS.DB.port}/tcp`]: [
+              { HostPort: String(CONTAINERS.DB.port) },
+            ],
+          },
+        },
+      })
+      .then((ctr) => ctr.start());
+    message = "New Postgres container created & started";
   }
 
-  await docker
-    .createContainer({
-      Image: CONTAINERS.DB.image,
-      name: CONTAINERS.DB.name,
-      Env: [`POSTGRES_PASSWORD=${POSTGRES_PASSWORD}`],
-      HostConfig: {
-        PortBindings: {
-          [`${CONTAINERS.DB.port}/tcp`]: [
-            { HostPort: String(CONTAINERS.DB.port) },
-          ],
-        },
-      },
-    })
-    .then((ctr) => ctr.start());
+  // Wait for Postgres to be ready before returning
+  await waitForPostgres();
 
-  return "New Postgres container created & started";
+  return message;
 };
 
 /**

@@ -3,19 +3,26 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "prepare": "echo 'DATABASE_URL=\"postgres://postgres:password@localhost:5432/mydb\"' > .env && pnpm generate:db",
+    "reset:db": "rimraf prisma/migrations && rimraf generated && pnpm prisma migrate reset --force",
+    "migrate:db": "prisma migrate dev",
+    "studio:db": "prisma studio",
+    "generate:db": "prisma generate",
     "dev": "tsx watch src/index.ts",
-    "start": "tsx src/index.ts"
+    "start": "tsx src/index.ts",
+    "setup:db": "pnpm run migrate:db --name pre-build && pnpm run generate:db"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@optimeleon/db": "workspace:*",
     "@clerk/express": "^1.7.15",
     "bullmq": "^5.56.9",
     "dockerode": "^4.0.7",
     "express": "^5.1.0",
-    "redis": "^5.7.0"
+    "redis": "^5.7.0",
+    "prisma": "^6.13.0",
+    "@prisma/client": "^6.13.0"
   },
   "devDependencies": {
     "@optimeleon/eslint": "workspace:*",

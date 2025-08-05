@@ -12,12 +12,12 @@ import {
   redisPostRequestHandler,
 } from "@handlers/queue";
 import { verifyClerk } from "@middlewares/clerk-auth";
-import { createProject, getProject, listProjects } from "@optimeleon/db";
 import worker from "@workers";
 import { Queue } from "bullmq";
 import express from "express";
 import fs from "fs";
 import path from "path";
+import { createProject, getProject, listProjects } from "./prisma";
 
 const app = express();
 app.use(express.json());

@@ -1,11 +1,11 @@
 /* eslint-disable no-console -- needed */
 
 import { CONTAINERS } from "@common";
-import { updateProjectScriptPath } from "@optimeleon/db"; // ensure this is exported
 import axios from "axios";
 import { Worker } from "bullmq";
 import fs from "fs";
 import path from "path";
+import { updateProjectScriptPath } from "../prisma";
 
 const main = () => {
   console.log("Starting worker...");
