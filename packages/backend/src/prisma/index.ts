@@ -30,3 +30,7 @@ export const updateProjectScriptPath = async (
 ) => {
   return prisma.project.update({ where: { id }, data: { scriptPath } });
 };
+
+export const deleteProject = async (id: string) => {
+  return prisma.project.delete({ where: { id } });
+};

@@ -39,3 +39,5 @@ export const CONTAINERS: ContainerType = {
     port: PORTS.REDIS,
   },
 };
+
+export const BE_PORT = Number(process.env.PORT ?? 6969);

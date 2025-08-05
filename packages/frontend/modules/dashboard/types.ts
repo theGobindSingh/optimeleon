@@ -3,7 +3,6 @@ export interface Project {
   name: string;
   targetUrl: string;
   ignoredPaths: string[];
-  userId: string;
   scriptPath?: string;
   createdAt: Date;
 }

@@ -15,5 +15,5 @@
       "@workers/*": ["src/workers/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "global.d.ts"]
 }

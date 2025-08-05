@@ -13,7 +13,7 @@ export const DashboardWrapper = styled(CommonFullWidthWrapper)`
 
   .header {
     width: 100%;
-    padding: 1rem;
+    padding: 1rem 1rem;
     flex-shrink: 0;
     position: relative;
     display: flex;
@@ -36,11 +36,38 @@ export const DashboardWrapper = styled(CommonFullWidthWrapper)`
     gap: 1rem;
     width: 100%;
     height: 100%;
-    padding: 2rem;
+    padding: 2rem 1rem;
     display: grid;
     overflow-y: auto;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 `;
 
 export const DashboardTitle = styled(H1)``;
+
+export const ProjectWrapper = styled.div`
+  padding: 1rem;
+  border: 2px solid var(--color-text-700);
+  border-radius: 6px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-text-700);
+    border: 2px solid var(--color-text-700);
+    border-radius: 8px;
+    scale: 102.5%;
+  }
+
+  & > * {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+`;
