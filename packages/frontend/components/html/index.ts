@@ -15,8 +15,6 @@ type ColorType =
 type Weight = `${1 | 2 | 3 | 4 | 5 | 6 | 7 | 8}00`;
 
 const fontSizes = {
-  "4xs": "var(--fs-4xs)",
-  "3xs": "var(--fs-3xs)",
   "2xs": "var(--fs-2xs)",
   "1xs": "var(--fs-1xs)",
   s: "var(--fs-s)",
@@ -24,8 +22,6 @@ const fontSizes = {
   l: "var(--fs-l)",
   "1xl": "var(--fs-1xl)",
   "2xl": "var(--fs-2xl)",
-  "3xl": "var(--fs-3xl)",
-  "4xl": "var(--fs-4xl)",
 };
 
 export interface CommonTextProps {
@@ -60,7 +56,7 @@ const marginFn = ({ $margin }: Pick<CommonTextProps, "$margin">) =>
   $margin ?? "0";
 
 export const H1 = styled.h1<CommonTextProps>`
-  font-size: ${({ $size }) => fontSizes[$size ?? "4xl"]};
+  font-size: ${({ $size }) => fontSizes[$size ?? "2xl"]};
   margin: ${({ $margin }) => $margin ?? "0 0 0.75em 0"};
   font-weight: ${({ $weight }) => $weight ?? "700"};
   line-height: ${lineHeightFn};

@@ -5,19 +5,14 @@ export const breakpoints = {
     min: 0,
     max: 640,
   },
-  tablet: {
-    min: 641,
-    max: 1024,
-  },
   desktop: {
-    min: 1025,
+    min: 641,
     max: 99999,
   },
 };
 
 export const mediaQuery = {
   phone: `@media (min-width: ${breakpoints.phone.min}px) and (max-width: ${breakpoints.phone.max}px)`,
-  tablet: `@media (min-width: ${breakpoints.tablet.min}px) and (max-width: ${breakpoints.tablet.max}px)`,
   desktop: `@media (min-width: ${breakpoints.desktop.min}px)`,
 };
 

@@ -9,8 +9,8 @@ import {
 } from "@kami-ui/react-components";
 import { forwardRef, PropsWithChildren, Ref } from "react";
 
-interface CommonFullWidthWrapperProps {
-  className?: string;
+export interface CommonFullWidthWrapperProps {
+  className?: string | undefined;
   element?: FullWidthWrapperProps["element"];
   wrapperCss?: FullWidthWrapperProps["wrapperCss"];
   wrapperClassName?: FullWidthWrapperProps["wrapperClassName"];

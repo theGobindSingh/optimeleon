@@ -6,7 +6,7 @@ export const tabletContainerSize = "90%";
 export const mobileContainerSize = "90%";
 
 export const containerStyles = css`
-  ${mediaQuery.tablet} {
+  ${mediaQuery.desktop} {
     width: ${tabletContainerSize};
   }
   ${mediaQuery.phone} {
@@ -16,6 +16,7 @@ export const containerStyles = css`
 
 export const wrapperStyles = (bg?: string) => css`
   width: 100%;
+  overflow: hidden;
   ${bg &&
   css`
     background: ${bg};
