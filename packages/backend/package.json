@@ -17,12 +17,14 @@
   "license": "ISC",
   "dependencies": {
     "@clerk/express": "^1.7.15",
+    "@prisma/client": "^6.13.0",
+    "@types/cors": "^2.8.19",
     "bullmq": "^5.56.9",
+    "cors": "^2.8.5",
     "dockerode": "^4.0.7",
     "express": "^5.1.0",
-    "redis": "^5.7.0",
     "prisma": "^6.13.0",
-    "@prisma/client": "^6.13.0"
+    "redis": "^5.7.0"
   },
   "devDependencies": {
     "@optimeleon/eslint": "workspace:*",

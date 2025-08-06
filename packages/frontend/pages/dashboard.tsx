@@ -1,4 +1,4 @@
-import { serverAxios } from "@/request";
+import { serverAxios } from "@/request/server-axios";
 import { getAuth } from "@clerk/nextjs/server";
 import DashboardModule from "@modules/dashboard";
 import { GetServerSideProps } from "next";
@@ -23,6 +23,7 @@ export const getServerSideProps: GetServerSideProps<{
 
   try {
     const data = await (await serverAxios(context)).get(`/projects`);
+    console.log(data.data);
 
     return {
       props: {

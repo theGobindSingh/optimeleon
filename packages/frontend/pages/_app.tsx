@@ -6,6 +6,7 @@ import { ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
 import { globalStyles } from "@styles/global";
 import { kuiTheme, muiTheme } from "@styles/theme";
 import type { AppProps } from "next/app";
+import { Bounce, ToastContainer } from "react-toastify";
 
 const App = ({ Component, pageProps }: AppProps) => (
   <ClerkProvider>
@@ -14,6 +15,19 @@ const App = ({ Component, pageProps }: AppProps) => (
         <AppCacheProvider>
           <Global styles={globalStyles} />
           <Component {...pageProps} />
+          <ToastContainer
+            position="bottom-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+            transition={Bounce}
+          />
         </AppCacheProvider>
       </MuiThemeProvider>
     </ThemeProvider>

@@ -18,6 +18,7 @@ import {
   redisPostRequestHandler,
 } from "@handlers/queue";
 import worker from "@workers";
+import cors from "cors";
 import express, { Application } from "express";
 import fs from "fs";
 import path from "path";
@@ -26,6 +27,11 @@ import { getProject } from "./prisma";
 const app = express();
 app.use(express.json());
 app.use(clerkMiddleware({}));
+app.use(
+  cors({
+    origin: "*",
+  }),
+);
 
 // Initialize BullMQ queue for script generation
 
@@ -36,7 +42,7 @@ app.post("/projects", postProjectsHandler as Application);
 app.get("/projects", getProjectsHandler as Application);
 
 // Delete a project by ID
-app.delete("/projects?id=:id", deleteProjectsHandler as Application);
+app.delete("/projects/:id", deleteProjectsHandler as Application);
 
 // Serve the generated script, with user/origin validation
 app.get("/scripts/:id.js", async (req, res) => {
