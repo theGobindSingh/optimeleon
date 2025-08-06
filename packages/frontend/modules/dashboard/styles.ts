@@ -71,3 +71,36 @@ export const ProjectWrapper = styled.div`
     justify-content: space-between;
   }
 `;
+
+export const DialogContainer = styled.div`
+  background-color: var(--color-background-300);
+  padding: 1rem;
+  color: var(--color-text-100);
+  font-size: var(--fs-2xs);
+  & > * > * {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+`;
+
+export const IgnoredPathsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .ip-heading {
+    font-weight: 600;
+    color: var(--color-text-100);
+  }
+
+  .ignored-paths {
+    display: flex;
+    flex-direction: column;
+    margin: 0.5rem 0;
+  }
+
+  .path {
+    cursor: not-allowed;
+  }
+`;

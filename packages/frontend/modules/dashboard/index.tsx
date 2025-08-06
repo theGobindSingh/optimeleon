@@ -1,6 +1,7 @@
 import { axiosInstance } from "@/request";
 import { useUser } from "@clerk/nextjs";
 import { Span } from "@components/html";
+import AddDialog from "@modules/dashboard/add-dialog";
 import { DashboardWrapper, ProjectWrapper } from "@modules/dashboard/styles";
 import { DashboardProps, Project } from "@modules/dashboard/types";
 import { AddRounded } from "@mui/icons-material";
@@ -12,6 +13,15 @@ const Dashboard = ({
   className,
   projects: projectsWithoutState = [],
 }: DashboardProps) => {
+  const [newProjectDialogOpen, setNewProjectDialogOpen] = useState(false);
+
+  const newProjectHandler = () => {
+    setNewProjectDialogOpen(true);
+  };
+  const newProjectCloseHandler = () => {
+    setNewProjectDialogOpen(false);
+  };
+
   // remove this
   const { user } = useUser();
   useEffect(() => {
@@ -21,6 +31,11 @@ const Dashboard = ({
   }, [user]);
 
   const [projects, setProjects] = useState<Project[]>(projectsWithoutState);
+
+  const addProject = useCallback((project: Project) => {
+    setProjects((prevProjects) => [...prevProjects, project]);
+  }, []);
+
   const deleteProject = useCallback((projectId: string) => {
     toast.info("Deleting project, please wait!");
     axiosInstance
@@ -56,7 +71,9 @@ const Dashboard = ({
         </Span>
         <Span>
           <Span $weight="600">Created at: </Span>
-          <Span>{new Date(project.createdAt).toDateString()}</Span>
+          <Span suppressHydrationWarning>
+            {new Date(project.createdAt).toDateString()}
+          </Span>
         </Span>
       </ProjectWrapper>
     );
@@ -65,7 +82,11 @@ const Dashboard = ({
     <DashboardWrapper className={className} bg="var(--color-background-300)">
       <header className="header">
         <Span>Your Projects:</Span>
-        <Button startIcon={<AddRounded />} variant="outlined">
+        <Button
+          startIcon={<AddRounded />}
+          variant="outlined"
+          onClick={newProjectHandler}
+        >
           New Project
         </Button>
       </header>
@@ -76,6 +97,11 @@ const Dashboard = ({
           projects.map(projectMapper)
         )}
       </main>
+      <AddDialog
+        open={newProjectDialogOpen}
+        onClose={newProjectCloseHandler}
+        addProject={addProject}
+      />
     </DashboardWrapper>
   );
 };

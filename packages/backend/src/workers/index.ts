@@ -9,7 +9,6 @@ import { updateProjectScriptPath } from "../prisma";
 
 const main = () => {
   console.log("Starting worker...");
-
   const worker = new Worker(
     "script-queue",
     async (job) => {
@@ -68,9 +67,22 @@ const main = () => {
     { connection: { host: "localhost", port: CONTAINERS.REDIS.port } },
   );
 
+  worker.on("ready", () => {
+    console.log("Worker is ready");
+  });
+
+  worker.on("active", (job) => {
+    console.log(`Worker is processing job ${job.id}`);
+  });
+
+  worker.on("stalled", (job) => {
+    console.warn(`Job ${job} stalled`);
+  });
+
   worker.on("completed", (job) => {
     console.log(`✅ Job ${job.id} completed for project ${job.data.projectId}`);
   });
+
   worker.on("failed", (job, err) => {
     console.error(`❌ Job ${job?.id} failed:`, err);
   });
