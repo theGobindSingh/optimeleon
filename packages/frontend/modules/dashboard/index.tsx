@@ -1,4 +1,5 @@
 import { axiosInstance } from "@/request";
+import { useUser } from "@clerk/nextjs";
 import { Span } from "@components/html";
 import { DashboardWrapper, ProjectWrapper } from "@modules/dashboard/styles";
 import { DashboardProps, Project } from "@modules/dashboard/types";
@@ -11,6 +12,8 @@ const Dashboard = ({
   className,
   projects: projectsWithoutState = [],
 }: DashboardProps) => {
+  const { user } = useUser();
+  console.log(user?.id);
   const [projects, setProjects] = useState<Project[]>(projectsWithoutState);
   const deleteProject = useCallback((projectId: string) => {
     toast.info("Deleting project, please wait!");
