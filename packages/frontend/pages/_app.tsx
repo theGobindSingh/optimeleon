@@ -8,30 +8,34 @@ import { kuiTheme, muiTheme } from "@styles/theme";
 import type { AppProps } from "next/app";
 import { Bounce, ToastContainer } from "react-toastify";
 
-const App = ({ Component, pageProps }: AppProps) => (
-  <ClerkProvider>
-    <ThemeProvider theme={kuiTheme}>
-      <MuiThemeProvider theme={muiTheme}>
-        <AppCacheProvider>
-          <Global styles={globalStyles} />
-          <Component {...pageProps} />
-          <ToastContainer
-            position="bottom-center"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick={false}
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="dark"
-            transition={Bounce}
-          />
-        </AppCacheProvider>
-      </MuiThemeProvider>
-    </ThemeProvider>
-  </ClerkProvider>
-);
+// const publishableKey = (await getSecret("NEXT_PUBLIC_CLERK_PUBLISHABLE"))!;
+
+const App = async ({ Component, pageProps }: AppProps) => {
+  return (
+    <ClerkProvider>
+      <ThemeProvider theme={kuiTheme}>
+        <MuiThemeProvider theme={muiTheme}>
+          <AppCacheProvider>
+            <Global styles={globalStyles} />
+            <Component {...pageProps} />
+            <ToastContainer
+              position="bottom-center"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick={false}
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+              transition={Bounce}
+            />
+          </AppCacheProvider>
+        </MuiThemeProvider>
+      </ThemeProvider>
+    </ClerkProvider>
+  );
+};
 
 export default App;

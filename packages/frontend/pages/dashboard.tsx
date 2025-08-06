@@ -23,7 +23,6 @@ export const getServerSideProps: GetServerSideProps<{
 
   try {
     const data = await (await serverAxios(context)).get(`/projects`);
-    console.log(data.data);
 
     return {
       props: {

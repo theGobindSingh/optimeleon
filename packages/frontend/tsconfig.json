@@ -2,7 +2,8 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": ["@optimeleon/tsconfigs/react.tsconfig.json"],
   "compilerOptions": {
-    "target": "ES5",
+    "module": "preserve",
+    "target": "es2017",
     "forceConsistentCasingInFileNames": true,
     "jsxImportSource": "@emotion/react",
     "baseUrl": ".",
@@ -32,7 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     "eslint.config.mjs",
-    "next.config.js"
+    "next.config.mjs"
   ],
   "exclude": ["node_modules"]
 }

@@ -70,7 +70,6 @@ export const deleteProjectsHandler: AppHandler<{
   message: string;
 }> = async (req, res) => {
   const projectId = req.params.id;
-  console.log(req.params);
   if (!projectId) {
     return res
       .status(400)

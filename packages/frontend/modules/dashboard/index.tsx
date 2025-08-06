@@ -12,8 +12,13 @@ const Dashboard = ({
   className,
   projects: projectsWithoutState = [],
 }: DashboardProps) => {
+  // remove this
   const { user } = useUser();
-  console.log(user?.id);
+  console.log({
+    id: user?.id,
+    env: process.env,
+  });
+
   const [projects, setProjects] = useState<Project[]>(projectsWithoutState);
   const deleteProject = useCallback((projectId: string) => {
     toast.info("Deleting project, please wait!");

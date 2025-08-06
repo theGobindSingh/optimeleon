@@ -1,4 +1,5 @@
 import commonjs from "@rollup/plugin-commonjs";
+import json from "@rollup/plugin-json";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
@@ -93,11 +94,13 @@ export const commonConfig = ({
   tsConfigOpts: { outDir, ...restTsOpts },
   resolveNode = true,
   extraExternalPackages = [],
+  extraConfig = {},
 }) => {
   const finalExternalPackages = [...externalPackages, ...extraExternalPackages];
 
   /** @type {import('rollup').RollupOptions["plugins"]} */
   const plugins = [
+    json(),
     tsConfigPaths(),
     typescript({ ...tsOptions, outDir: outDir, ...restTsOpts }),
     commonjs({
@@ -122,6 +125,7 @@ export const commonConfig = ({
   const config = {
     external: finalExternalPackages,
     plugins,
+    ...extraConfig,
   };
   return config;
 };
@@ -195,6 +199,7 @@ export const createLibraryBuildConfig = ({
   watchPaths = ["src/**/*", "node_modules/@kami-ui/**/*"],
   dtsCleanupPaths = [],
   extraExternalPackages = [],
+  extraConfig = {},
 }) => {
   // Create main build config without DTS processing initially
   const mainConfig = commonConfig({
@@ -252,6 +257,7 @@ export const createLibraryBuildConfig = ({
           extraExternalPackages,
         }),
       ],
+      ...extraConfig,
     },
   ];
 

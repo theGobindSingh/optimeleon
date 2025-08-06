@@ -1,6 +1,8 @@
 {
   "$schema": "https://turborepo.com/schema.json",
+  "globalDependencies": [".env"],
   "ui": "tui",
+  "globalEnv": ["NEXT_PUBLIC_API_BASE_URL"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

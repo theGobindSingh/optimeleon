@@ -9,17 +9,10 @@ declare const terser: any;
 declare const commonConfig: (props: {
   tsConfigOpts: RollupTypescriptOptions;
   resolveNode?: boolean | undefined;
+  extraConfig?: RollupOptions | undefined;
 }) => RollupOptions;
 
-declare const createLibraryBuildConfig: ({
-  name,
-  input,
-  outputFolder,
-  tsConfigOpts,
-  resolveNode,
-  watchPaths,
-  dtsCleanupPaths,
-}: {
+declare const createLibraryBuildConfig: (props: {
   name: string;
   input: string;
   outputFolder: string;
@@ -28,6 +21,7 @@ declare const createLibraryBuildConfig: ({
   watchPaths?: string[] | undefined;
   dtsCleanupPaths?: string[] | undefined;
   extraExternalPackages?: string[];
+  extraConfig?: RollupOptions | undefined;
 }) => RollupOptions[];
 
 export {

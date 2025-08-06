@@ -24,9 +24,21 @@ import fs from "fs";
 import path from "path";
 import { getProject } from "./prisma";
 
+import dotenv from "dotenv";
+
+dotenv.config({
+  path: [path.resolve(__dirname, "../../../.env"), "./.env", "../.env"],
+});
+
+console.log(process.env);
+
 const app = express();
 app.use(express.json());
-app.use(clerkMiddleware({}));
+app.use(
+  clerkMiddleware({
+    publishableKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!,
+  }),
+);
 app.use(
   cors({
     origin: "*",
