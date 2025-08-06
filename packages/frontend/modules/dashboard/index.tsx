@@ -4,9 +4,10 @@ import { Span } from "@components/html";
 import AddDialog from "@modules/dashboard/add-dialog";
 import { DashboardWrapper, ProjectWrapper } from "@modules/dashboard/styles";
 import { DashboardProps, Project } from "@modules/dashboard/types";
-import { AddRounded } from "@mui/icons-material";
+import { AddRounded, DeleteRounded } from "@mui/icons-material";
 import Button from "@mui/material/Button";
-import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
+import { MouseEventHandler, useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const Dashboard = ({
@@ -53,10 +54,25 @@ const Dashboard = ({
 
   const projectMapper = (project: Project) => {
     const clickHandler = () => {
+      const scriptTag = `<script src="http://localhost:6969/scripts/${project.id}.js"></script>`;
+      navigator.clipboard.writeText(scriptTag).then(
+        () => {
+          toast.success("Script tag copied to clipboard!");
+        },
+        () => {
+          toast.error("Failed to copy script tag!");
+        },
+      );
+    };
+    const deleteHandler: MouseEventHandler<HTMLDivElement> = (e) => {
+      e.stopPropagation();
       deleteProject(project.id);
     };
     return (
       <ProjectWrapper key={project.id} onClick={clickHandler}>
+        <div className="del-wrapper" onClick={deleteHandler}>
+          <DeleteRounded />
+        </div>
         <Span>
           <Span $weight="600">ID: </Span>
           <Span>{project.id}</Span>
@@ -81,7 +97,10 @@ const Dashboard = ({
   return (
     <DashboardWrapper className={className} bg="var(--color-background-300)">
       <header className="header">
-        <Span>Your Projects:</Span>
+        <Span className="first">Your Projects:</Span>
+        <Link href="/test">
+          <Button variant="outlined">Go to Test Page</Button>
+        </Link>
         <Button
           startIcon={<AddRounded />}
           variant="outlined"

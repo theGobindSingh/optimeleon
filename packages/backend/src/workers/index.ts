@@ -2,43 +2,44 @@
 
 import { CONTAINERS } from "@common";
 import axios from "axios";
-import { Worker } from "bullmq";
+import { Job, Worker } from "bullmq";
 import fs from "fs";
 import path from "path";
 import { updateProjectScriptPath } from "../prisma";
 
-const main = () => {
-  console.log("Starting worker...");
-  const worker = new Worker(
-    "script-queue",
-    async (job) => {
-      const { projectId, targetUrl } = job.data as {
-        projectId: string;
-        targetUrl: string;
-        ignoredPaths: string[];
-        userId: string;
-      };
+interface JobData {
+  projectId: string;
+  targetUrl: string;
+  ignoredPaths: string[];
+  userId: string;
+}
 
-      // 1. Fetch HTML
-      const response = await axios.get(targetUrl);
-      if (response.status !== 200) {
-        throw new Error(`Failed to fetch ${targetUrl}: ${response.status}`);
-      }
+const jobHandler = async (job: Job<JobData, any, string>) => {
+  const { projectId, targetUrl } = job.data;
 
-      // 2. Generate JS snippet
-      const variationIndex = new Date().getHours() % 4;
-      const greetings = [
-        "Good morning",
-        "Good afternoon",
-        "Good evening",
-        "Good night",
-      ];
-      const styles =
-        variationIndex < 2
-          ? "document.body.style.background='white';document.body.style.color='black';"
-          : "document.body.style.background='black';document.body.style.color='white';";
+  // 1. Fetch HTML
+  const { data } = await axios.get(targetUrl);
+  console.log(`Fetched HTML from ${targetUrl} for project ${projectId}`, data);
 
-      const scriptContent = `
+  return;
+  if (response.status !== 200) {
+    throw new Error(`Failed to fetch ${targetUrl}: ${response.status}`);
+  }
+
+  // 2. Generate JS snippet
+  const variationIndex = new Date().getHours() % 4;
+  const greetings = [
+    "Good morning",
+    "Good afternoon",
+    "Good evening",
+    "Good night",
+  ];
+  const styles =
+    variationIndex < 2
+      ? "document.body.style.background='white';document.body.style.color='black';"
+      : "document.body.style.background='black';document.body.style.color='white';";
+
+  const scriptContent = `
 (function() {
   const greeting = '${greetings[variationIndex]}';
   ${styles}
@@ -52,20 +53,23 @@ const main = () => {
 })();
 `;
 
-      // 3. Write to disk
-      const scriptsDir = path.join(process.cwd(), "public", "scripts");
-      if (!fs.existsSync(scriptsDir))
-        fs.mkdirSync(scriptsDir, { recursive: true });
-      const filePath = path.join(scriptsDir, `${projectId}.js`);
-      fs.writeFileSync(filePath, scriptContent, "utf-8");
+  // 3. Write to disk
+  const scriptsDir = path.join(process.cwd(), "public", "scripts");
+  if (!fs.existsSync(scriptsDir)) fs.mkdirSync(scriptsDir, { recursive: true });
+  const filePath = path.join(scriptsDir, `${projectId}.js`);
+  fs.writeFileSync(filePath, scriptContent, "utf-8");
 
-      // 4. Update DB
-      await updateProjectScriptPath(projectId, filePath);
+  // 4. Update DB
+  await updateProjectScriptPath(projectId, filePath);
 
-      return { filePath };
-    },
-    { connection: { host: "localhost", port: CONTAINERS.REDIS.port } },
-  );
+  return { filePath };
+};
+
+const main = () => {
+  console.log("Starting worker...");
+  const worker = new Worker("script-queue", jobHandler, {
+    connection: { host: "localhost", port: CONTAINERS.REDIS.port },
+  });
 
   worker.on("ready", () => {
     console.log("Worker is ready");

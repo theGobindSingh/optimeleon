@@ -16,4 +16,19 @@ model Project {
   userId       String
   scriptPath   String?
   createdAt    DateTime  @default(now())
+  
+  scripts      Scripts[] // One project can have many scripts
+
+  @@map("projects")
+}
+
+model Scripts {
+  id        String   @id @default(cuid())
+  projectId String
+  content   Bytes
+  
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@map("scripts")
 }
