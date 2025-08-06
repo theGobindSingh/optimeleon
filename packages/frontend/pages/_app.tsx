@@ -10,7 +10,7 @@ import { Bounce, ToastContainer } from "react-toastify";
 
 // const publishableKey = (await getSecret("NEXT_PUBLIC_CLERK_PUBLISHABLE"))!;
 
-const App = async ({ Component, pageProps }: AppProps) => {
+const App = ({ Component, pageProps }: AppProps) => {
   return (
     <ClerkProvider>
       <ThemeProvider theme={kuiTheme}>

@@ -5,7 +5,7 @@ import { DashboardWrapper, ProjectWrapper } from "@modules/dashboard/styles";
 import { DashboardProps, Project } from "@modules/dashboard/types";
 import { AddRounded } from "@mui/icons-material";
 import Button from "@mui/material/Button";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const Dashboard = ({
@@ -14,10 +14,11 @@ const Dashboard = ({
 }: DashboardProps) => {
   // remove this
   const { user } = useUser();
-  console.log({
-    id: user?.id,
-    env: process.env,
-  });
+  useEffect(() => {
+    console.log({
+      id: user?.id,
+    });
+  }, [user]);
 
   const [projects, setProjects] = useState<Project[]>(projectsWithoutState);
   const deleteProject = useCallback((projectId: string) => {
