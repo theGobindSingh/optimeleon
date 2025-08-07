@@ -12,20 +12,17 @@ Along with node.js, you will also need corepack enabled & pnpm installed
 
 ## Setup
 
-- clone the repository
-- add ENVs
-- Install dependencies
-- Set up the database (for the first time only)
+- clone the repository (duh 😅)
+- add a single SECRET key to the `.env` file in the root directory (Smart ENVs 😎) (Ask admin)
+- Install dependencies (Fun Fact: Black holes are lighter than node_modules 🫠)
 - Start the development server 
 
-Easy Peasy:
-
+Easy Peasy:  
 ```bash
 git clone https://github.com/theGobindSingh/optimeleon
 cd optimeleon
-# Create a .env file in the root directory and add ENVs
+# Create a .env file and add SECRET=xxxxxxxxx
 pnpm install
-pnpm --filter @optimeleon/backend run setup:db
 pnpm dev
 ```
 
