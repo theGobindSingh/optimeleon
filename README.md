@@ -14,6 +14,7 @@ Along with node.js, you will also need corepack enabled & pnpm installed
 
 - clone the repository
 - Install dependencies
+- Set up the database (for the first time only)
 - Start the development server 
 
 Easy Peasy:
@@ -22,6 +23,7 @@ Easy Peasy:
 git clone https://github.com/theGobindSingh/optimeleon
 cd optimeleon
 pnpm install
+pnpm --filter @optimeleon/backend run setup:db
 pnpm dev
 ```
 
