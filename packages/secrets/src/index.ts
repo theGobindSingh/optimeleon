@@ -1,13 +1,26 @@
-import { InfisicalSDK, Secret } from "@infisical/sdk";
+/* eslint-disable no-console -- no need */
+/* eslint-disable prefer-destructuring -- no need */
+import { InfisicalSDK } from "@infisical/sdk";
+import { config } from "dotenv";
+import { writeFileSync } from "fs";
+import path from "path";
+
+config({
+  path: [path.resolve(__dirname, "../../../.env"), "./.env", "../.env"],
+});
 
 const client = new InfisicalSDK({});
-let secrets: Secret[] = [];
 
 const setup = async () => {
-  if (secrets.length > 0) return;
+  const SECRET = process.env.SECRET;
+  if (!SECRET) {
+    throw new Error(
+      "Please set the SECRET environment variable in your root .env file.",
+    );
+  }
   await client.auth().universalAuth.login({
-    clientId: "a195f1b9-8e21-4561-859e-40e17bca1b68",
-    clientSecret: process.env.SECRET!,
+    clientId: "c7795b2e-52cc-4771-8560-d3a9fbb502f5",
+    clientSecret: SECRET,
   });
 
   const allSecrets = await client.secrets().listSecrets({
@@ -15,11 +28,36 @@ const setup = async () => {
     projectId: "361b99f7-3c65-4ba7-aa24-e730be5a1f5f",
   });
 
-  secrets = allSecrets.secrets;
+  const secrets =
+    allSecrets.secrets?.map(({ secretKey, secretValue }) => ({
+      secretKey,
+      secretValue,
+    })) ?? [];
+
+  return { secrets, secretKey: SECRET };
 };
 
-export const getSecret = async (key: string) => {
-  await setup();
-  const secret = secrets.find((s) => s.secretKey === key);
-  return secret?.secretValue;
+const main = async () => {
+  try {
+    const { secretKey, secrets } = await setup();
+    console.log("Infisical secrets initialized successfully.");
+
+    // write all secrets to .env at root
+    const envFilePath = path.resolve(__dirname, "../../../.env");
+    writeFileSync(envFilePath, `SECRET=${secretKey}\n`, {
+      encoding: "utf8",
+      flag: "w", // overwrite the file
+    });
+    secrets.forEach(({ secretKey, secretValue }) => {
+      writeFileSync(envFilePath, `${secretKey}=${secretValue}\n`, {
+        encoding: "utf8",
+        flag: "a", // append to the file
+      });
+    });
+  } catch (err: any) {
+    console.error(err);
+    process.exit(1);
+  }
 };
+
+void main();

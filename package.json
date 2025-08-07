@@ -6,11 +6,12 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
-    "prepare": "husky",
+    "prepare": "husky && pnpm --filter @optimeleon/secrets run init",
     "commit": "git-cz",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "clean": "rimraf pnpm-lock.yaml ./**/*/pnpm-lock.yaml dist ./**/*/dist node_modules ./**/*/node_modules .turbo ./**/*/.turbo .next ./**/*/.next .cache ./**/*/.cache"
+    "clean": "rimraf pnpm-lock.yaml ./**/*/pnpm-lock.yaml dist ./**/*/dist node_modules ./**/*/node_modules .turbo ./**/*/.turbo .next ./**/*/.next .cache ./**/*/.cache",
+    "setup:db": "pnpm --filter @optimeleon/backend run setup:db"
   },
   "resolutions": {
     "@types/react": "19.1.9",

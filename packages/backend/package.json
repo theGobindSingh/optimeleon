@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "prepare": "tsx src/internal/index.ts",
     "expose-env": "echo 'DATABASE_URL=postgres://postgres:password@localhost:5432/mydb' > .env",
     "reset:db": "rimraf prisma/migrations && rimraf generated && pnpm prisma migrate reset --force",
     "migrate:db": "pnpm expose-env && prisma migrate dev",
