@@ -1,68 +1,47 @@
 /* eslint-disable no-console -- needed */
 
 import { CONTAINERS } from "@common";
-import axios from "axios";
 import { Job, Worker } from "bullmq";
-import fs from "fs";
+import { readFile } from "fs/promises";
 import path from "path";
-import { updateProjectScriptPath } from "../prisma";
 
-interface JobData {
-  projectId: string;
-  targetUrl: string;
-  ignoredPaths: string[];
-  userId: string;
-}
+import { JobData, JobResult } from "@common/types";
+import { createScript } from "src/prisma";
 
-const jobHandler = async (job: Job<JobData, any, string>) => {
-  const { projectId, targetUrl } = job.data;
+const jobHandler = async (
+  job: Job<JobData, JobResult, string>,
+): Promise<JobResult> => {
+  const { projectId, targetUrl, projectName } = job.data;
+  let js = `// Script for project ${projectId} at ${targetUrl}\n`;
 
-  // 1. Fetch HTML
-  const { data } = await axios.get(targetUrl);
-  console.log(`Fetched HTML from ${targetUrl} for project ${projectId}`, data);
+  const scriptPath = path.resolve(
+    __dirname,
+    "../scripts",
+    "check-variation.js",
+  );
 
-  return;
-  if (response.status !== 200) {
-    throw new Error(`Failed to fetch ${targetUrl}: ${response.status}`);
+  try {
+    const tempJs = await readFile(scriptPath, {
+      encoding: "utf-8",
+    });
+    js += tempJs.replace(/<CHANGEABLE_CONTENT>/gm, projectName as string);
+  } catch (err) {
+    console.error(err);
+    return {
+      isSuccess: false,
+    };
   }
 
-  // 2. Generate JS snippet
-  const variationIndex = new Date().getHours() % 4;
-  const greetings = [
-    "Good morning",
-    "Good afternoon",
-    "Good evening",
-    "Good night",
-  ];
-  const styles =
-    variationIndex < 2
-      ? "document.body.style.background='white';document.body.style.color='black';"
-      : "document.body.style.background='black';document.body.style.color='white';";
-
-  const scriptContent = `
-(function() {
-  const greeting = '${greetings[variationIndex]}';
-  ${styles}
-  const heading = document.querySelector('h1,h2,h3,h4,h5,h6');
-  if (heading) {
-    heading.textContent = greeting + ' ' + heading.textContent;
+  try {
+    await createScript(projectId, js);
+    return {
+      isSuccess: true,
+    };
+  } catch {
+    return {
+      isSuccess: false,
+    };
   }
-  const url = new URL(window.location);
-  url.searchParams.set('variation', '${String.fromCharCode(97 + variationIndex)}');
-  window.history.replaceState({}, '', url);
-})();
-`;
-
-  // 3. Write to disk
-  const scriptsDir = path.join(process.cwd(), "public", "scripts");
-  if (!fs.existsSync(scriptsDir)) fs.mkdirSync(scriptsDir, { recursive: true });
-  const filePath = path.join(scriptsDir, `${projectId}.js`);
-  fs.writeFileSync(filePath, scriptContent, "utf-8");
-
-  // 4. Update DB
-  await updateProjectScriptPath(projectId, filePath);
-
-  return { filePath };
 };
 
 const main = () => {
@@ -84,7 +63,9 @@ const main = () => {
   });
 
   worker.on("completed", (job) => {
-    console.log(`✅ Job ${job.id} completed for project ${job.data.projectId}`);
+    console.log(
+      `✅ Job ${job.id} completed for project ${job.data.projectName}`,
+    );
   });
 
   worker.on("failed", (job, err) => {

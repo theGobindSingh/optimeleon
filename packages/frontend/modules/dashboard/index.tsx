@@ -54,7 +54,7 @@ const Dashboard = ({
 
   const projectMapper = (project: Project) => {
     const clickHandler = () => {
-      const scriptTag = `<script src="http://localhost:6969/scripts/${project.id}.js"></script>`;
+      const scriptTag = `<script src="http://localhost:6969/load-base-script?id=${project.id}"></script>`;
       navigator.clipboard.writeText(scriptTag).then(
         () => {
           toast.success("Script tag copied to clipboard!");

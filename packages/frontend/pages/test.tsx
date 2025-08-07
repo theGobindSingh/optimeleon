@@ -1,4 +1,13 @@
+import { useEffect, useState } from "react";
+
 const TestPage = () => {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    setShow(true);
+  }, []);
+  if (!show) {
+    return <div>Loading...</div>;
+  }
   return (
     <div>
       <h1>Test Page</h1>
@@ -7,7 +16,6 @@ const TestPage = () => {
         you see this message, the frontend is set up properly. You can also
         check the console for any logs or errors.
       </p>
-      <script src="http://localhost:6969/scripts/test.js"></script>
     </div>
   );
 };

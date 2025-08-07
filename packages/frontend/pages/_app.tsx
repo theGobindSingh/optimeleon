@@ -16,6 +16,7 @@ const App = ({ Component, pageProps }: AppProps) => {
       <ThemeProvider theme={kuiTheme}>
         <MuiThemeProvider theme={muiTheme}>
           <AppCacheProvider>
+            {/* insert your copied script tag here */}
             <Global styles={globalStyles} />
             <Component {...pageProps} />
             <ToastContainer

@@ -1,5 +1,6 @@
 import type { ExpressRequestWithAuth } from "@clerk/express";
 import { CONTAINERS } from "@common";
+import { JobData } from "@common/types";
 import { Queue } from "bullmq";
 import { Response } from "express";
 import { Project } from "generated/prisma";
@@ -10,7 +11,7 @@ type AppHandler<T> = (
   res: Response<T>,
 ) => Promise<unknown>;
 
-const projectQueue = new Queue("script-queue", {
+const projectQueue = new Queue<JobData>("script-queue", {
   connection: { host: "localhost", port: CONTAINERS.REDIS.port },
 });
 
@@ -20,7 +21,8 @@ projectQueue.on("waiting", (jobId) => {
 
 export const postProjectsHandler: AppHandler<any> = async (req, res) => {
   const { name, targetUrl, ignoredPaths = [] } = req.body;
-  const userId = req?.auth?.()?.userId;
+  const user = req?.auth?.();
+  const userId = user?.userId;
   if (!userId) {
     return res.status(401).json({ error: "Unauthorized" });
   }
@@ -43,6 +45,7 @@ export const postProjectsHandler: AppHandler<any> = async (req, res) => {
     targetUrl: project.targetUrl,
     ignoredPaths: project.ignoredPaths,
     userId: project.userId,
+    projectName: project.name,
   });
 
   const formattedProject: Omit<Project, "userId" | "scriptPath"> = {
@@ -70,7 +73,7 @@ export const getProjectsHandler: AppHandler<{
   const projects = await listProjects(userId);
   return res.status(200).json({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars -- remove userId from response
-    projects: projects.map(({ userId, scriptPath, ...rest }) => rest),
+    projects: projects.map(({ userId, ...rest }) => rest),
     isError: false,
     message: "Projects retrieved successfully",
   });

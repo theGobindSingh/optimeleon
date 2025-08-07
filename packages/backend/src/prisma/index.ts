@@ -24,13 +24,18 @@ export const getProject = async (id: string) => {
   return prisma.project.findUnique({ where: { id } });
 };
 
-export const updateProjectScriptPath = async (
-  id: string,
-  scriptPath: string,
-) => {
-  return prisma.project.update({ where: { id }, data: { scriptPath } });
-};
-
 export const deleteProject = async (id: string) => {
   return prisma.project.delete({ where: { id } });
+};
+
+export const createScript = async (projectId: string, content: string) => {
+  return prisma.scripts.create({
+    data: { content: Buffer.from(content, "utf-8"), projectId },
+  });
+};
+
+export const getScript = async (projectId: string) => {
+  return prisma.scripts.findFirst({
+    where: { projectId },
+  });
 };

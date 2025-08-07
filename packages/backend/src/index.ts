@@ -22,7 +22,7 @@ import cors from "cors";
 import express, { Application } from "express";
 import path from "path";
 
-import { getScriptHandler } from "@handlers/script";
+import { getBaseScriptHandler, getScriptHandler } from "@handlers/script";
 import dotenv from "dotenv";
 
 dotenv.config({
@@ -52,6 +52,8 @@ app.use(
 );
 
 app.get("/scripts/:projectId.js", getScriptHandler as Application);
+
+app.get("/load-base-script", getBaseScriptHandler as Application);
 
 // Create a new project and enqueue script generation
 app.post("/projects", postProjectsHandler as Application);
